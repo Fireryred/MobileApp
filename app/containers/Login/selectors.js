@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 
-export const selectAuthDomain = (state) => state.get('auths');
+export const selectAuthDomain = (state) => state.get('auth');
 
 const makeSelectAuth = () =>
   createSelector(selectAuthDomain, (substate) => substate.toJS());
