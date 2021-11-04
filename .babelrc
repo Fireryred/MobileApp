@@ -1,0 +1,24 @@
+  {
+    "plugins": [
+      ["module-resolver", {
+        "root": ["./app"],
+        "alias": {
+          "app": ["./app"],
+          "api": ["./app/api"],
+          "components": ["./app/components"],
+          "containers": ["./app/containers"],
+          "database": ["./app/database"],
+          "navigations": ["./app/navigations"],
+          "theme": ["./app/theme"],
+          "utils": ["./app/utils"],
+          "assets": ["./app/assets"],
+          "constants": ["./app/utils/constants"],
+          "config": ["./app/config"],
+          "validations": ["./app/validations"],
+          "services": ["./app/services"],
+          "hoc": ["./app/hoc"],
+          "hooks": ["./app/hooks"]
+        }
+      }]
+    ]
+  }
