@@ -8,6 +8,8 @@ const INITIAL_STATE = fromJS({
   savedUsers: null,
   selectedSavedUser: null,
   userRoles: [],
+  loginProgressStatus: false,
+  userData: null,
 });
 
 export const doSetAuthSuccess = (state, {data}) => {
@@ -23,11 +25,18 @@ export const doTemporaryLogout = (state) =>
     userData: null,
   });
 
+export const doSetLoginProgress = (state, {loginProgressStatus}) =>
+  state.merge({
+    loginProgressStatus,
+  });
+  
+
 const {Types} = Actions;
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.SET_AUTH_SUCCESS]: doSetAuthSuccess,
   [Types.TEMPORARY_LOGOUT]: doTemporaryLogout,
+  [Types.SET_LOGIN_PROGRESS]: doSetLoginProgress,
 });
 
 export default reducer;

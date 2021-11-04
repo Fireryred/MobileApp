@@ -56,15 +56,15 @@ class LoginScreen extends Component {
 
   submitForm = (values) => {
     const {attemptLogin, dispatch, navigation} = this.props;
-    return new Promise((resolve, reject) => {
-      // attemptLogin({values, resolve, reject});
-      this.props.setAuthSuccess({test: 'test'});
-    })
-      .then(() => {
-        dispatch(reset('login'));
-        // navigation.navigate('SignUpScreen');
-      })
-      .catch((e) => {});
+    // return new Promise((resolve, reject) => {
+      attemptLogin(values.toJS());
+      // this.props.setAuthSuccess({test: 'test'});
+    // })
+    //   .then(() => {
+    //     dispatch(reset('login'));
+    //     // navigation.navigate('SignUpScreen');
+    //   })
+    //   .catch((e) => {});
   };
 
   render() {
@@ -74,12 +74,15 @@ class LoginScreen extends Component {
       pristine,
       invalid,
       isLoading,
+      loginProgress,
     } = this.props;
     const {showPassword} = this.state;
 
     const disabled = pristine || invalid || isLoading;
 
     const enabledButton = {backgroundColor: disabled ? '#9DA3B4' : '#B22234'};
+
+
 
     return (
       <CustomContainer>
@@ -153,7 +156,7 @@ class LoginScreen extends Component {
                 onPress={handleSubmit((values) => this.submitForm(values))}
                 // disabled={disabled}
               >
-                <Text style={{fontWeight: '600'}}>Login</Text>
+                <Text style={{fontWeight: '600'}}>{loginProgress ? 'Loading....' : 'Login'}</Text>
               </Button>
             </Form>
             </KeyboardAvoidingView>
@@ -188,11 +191,13 @@ class LoginScreen extends Component {
 }
 
 LoginScreen.propTypes = {
- 
+  isLoading: PropTypes.bool,
+  loginProgress: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
-  
+  isLoading: RootSelectors.selectIsLoading(),
+  loginProgress: selectors.selectLoginProgressStatus(),
 });
 
 const mapDispatchToProps = (dispatch) => {
