@@ -129,6 +129,7 @@ android {
     }
 
     defaultConfig {
+        manifestPlaceholders = [auth0Domain: "dev-p-g2q-gn.us.auth0.com", auth0Scheme: "0imMNzMP8CZyvcblFOYwEKlpKWvTSAOB"]
         applicationId "com.mobileapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

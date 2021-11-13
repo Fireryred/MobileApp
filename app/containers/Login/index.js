@@ -18,7 +18,12 @@ import {
   Row,
 } from 'components';
 // import Modal from 'react-native-modal';
-import {TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView} from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+} from 'react-native';
 
 import styles from './style';
 import theme from 'theme';
@@ -36,6 +41,7 @@ import {selectors} from './selectors';
 import {selectors as MenuSelectors} from '../Menu/selectors';
 import {selectors as RootSelectors} from '../Root/selectors';
 import {capitalizeFirstLetter} from 'utils/utilityFunctions';
+import Auth0 from 'react-native-auth0';
 
 class LoginScreen extends Component {
   state = {
@@ -44,10 +50,20 @@ class LoginScreen extends Component {
   };
 
   componentDidMount() {
-    const {
-      setLoading,
-    } = this.props;
+    const {setLoading} = this.props;
     setLoading(false);
+    const auth0 = new Auth0({
+      domain: 'dev-p-g2q-gn.us.auth0.com',
+      clientId: '0imMNzMP8CZyvcblFOYwEKlpKWvTSAOB',
+    });
+    auth0.webAuth
+      .authorize({scope: 'openid profile email'})
+      .then((credentials) =>
+        // Successfully authenticated
+        // Store the accessToken
+        this.setState({accessToken: credentials.accessToken}),
+      )
+      .catch((error) => console.log(error));
   }
 
   handleShowPassword = () => {
@@ -57,8 +73,8 @@ class LoginScreen extends Component {
   submitForm = (values) => {
     const {attemptLogin, dispatch, navigation} = this.props;
     // return new Promise((resolve, reject) => {
-      attemptLogin(values.toJS());
-      // this.props.setAuthSuccess({test: 'test'});
+    attemptLogin(values.toJS());
+    // this.props.setAuthSuccess({test: 'test'});
     // })
     //   .then(() => {
     //     dispatch(reset('login'));
@@ -68,107 +84,113 @@ class LoginScreen extends Component {
   };
 
   render() {
-    const {
-      handleSubmit,
-      error,
-      pristine,
-      invalid,
-      isLoading,
-      loginProgress,
-    } = this.props;
+    const {handleSubmit, error, pristine, invalid, isLoading, loginProgress} =
+      this.props;
     const {showPassword} = this.state;
 
     const disabled = pristine || invalid || isLoading;
 
     const enabledButton = {backgroundColor: disabled ? '#9DA3B4' : '#B22234'};
 
-
-
     return (
       <CustomContainer>
         {/* <Container> */}
-          <Content showsVerticalScrollIndicator={false} style={styles.content}>
+        <Content showsVerticalScrollIndicator={false} style={styles.content}>
           <CustomContainer safe>
-              <View style={{ flex: 1, alignItems: 'center', marginBottom: 32 }}>
-                <Text style={{ marginTop: 16, fontSize: 30, fontWeight: 'bold' }}>Login</Text>
-              </View>
-              <KeyboardAvoidingView>
-                <Form>
-              <Field
-                name="username"
-                component={RenderTextField}
-                label="Username"
-                underlineColorAndroid="transparent"
-                placeholderTextColor="rgba(255,255,255,0.9)"
-                returnKeyType="next"
-                autoCapitalize="none"
-                autoCorrect={false}
-                selectionColor={theme.colors.primary}
-                style={styles.stackedInput}
-                required={true}
-              />
+            <View style={{flex: 1, alignItems: 'center', marginBottom: 32}}>
+              <Text style={{marginTop: 16, fontSize: 30, fontWeight: 'bold'}}>
+                Login
+              </Text>
+            </View>
+            <KeyboardAvoidingView>
+              <Form>
+                <Field
+                  name="username"
+                  component={RenderTextField}
+                  label="Username"
+                  underlineColorAndroid="transparent"
+                  placeholderTextColor="rgba(255,255,255,0.9)"
+                  returnKeyType="next"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  selectionColor={theme.colors.primary}
+                  style={styles.stackedInput}
+                  required={true}
+                />
 
-              <Field
-                name="password"
-                component={RenderTextField}
-                label="Password"
-                underlineColorAndroid="transparent"
-                placeholderTextColor="rgba(255,255,255,0.9)"
-                returnKeyType="go"
-                autoCapitalize="none"
-                autoCorrect={false}
-                selectionColor={theme.colors.primary}
-                style={styles.stackedInput}
-                required={true}
-                secureTextEntry={true}
-                password={true}
-                showPassword={showPassword}
-                onPressToggle={this.handleShowPassword}
-                validate={[isRequired]}
-              />
+                <Field
+                  name="password"
+                  component={RenderTextField}
+                  label="Password"
+                  underlineColorAndroid="transparent"
+                  placeholderTextColor="rgba(255,255,255,0.9)"
+                  returnKeyType="go"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  selectionColor={theme.colors.primary}
+                  style={styles.stackedInput}
+                  required={true}
+                  secureTextEntry={true}
+                  password={true}
+                  showPassword={showPassword}
+                  onPressToggle={this.handleShowPassword}
+                  validate={[isRequired]}
+                />
 
-              <View style={{ flex: 1, flexDirection: 'row', alignContent: 'flex-end'}}>
-                <View style={{ flex: 1}}></View>
-                <View style={{ textAlign: 'right'}}>
-                <TouchableOpacity>
-                <Text style={styles.forgotPassword}>Forgot Password</Text>
-              </TouchableOpacity>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignContent: 'flex-end',
+                  }}>
+                  <View style={{flex: 1}}></View>
+                  <View style={{textAlign: 'right'}}>
+                    <TouchableOpacity>
+                      <Text style={styles.forgotPassword}>Forgot Password</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
 
+                {error && (
+                  <View style={styles.errorMessageContainer}>
+                    <Icon
+                      name="error-outline"
+                      type="MaterialIcons"
+                      style={styles.errorIcon}
+                    />
+                    <Text style={styles.errorMessage}>{error}</Text>
+                  </View>
+                )}
 
-             
-
-              {error && (
-                <View style={styles.errorMessageContainer}>
-                  <Icon
-                    name="error-outline"
-                    type="MaterialIcons"
-                    style={styles.errorIcon}
-                  />
-                  <Text style={styles.errorMessage}>{error}</Text>
-                </View>
-              )}
-
-              <Button
-                block
-                style={[styles.loginButton, {...enabledButton}]}
-                onPress={handleSubmit((values) => this.submitForm(values))}
-                // disabled={disabled}
-              >
-                <Text style={{fontWeight: '600'}}>{loginProgress ? 'Loading....' : 'Login'}</Text>
-              </Button>
-            </Form>
+                <Button
+                  block
+                  style={[styles.loginButton, {...enabledButton}]}
+                  onPress={handleSubmit((values) => this.submitForm(values))}
+                  // disabled={disabled}
+                >
+                  <Text style={{fontWeight: '600'}}>
+                    {loginProgress ? 'Loading....' : 'Login'}
+                  </Text>
+                </Button>
+              </Form>
             </KeyboardAvoidingView>
-            <View style={{ flex: 1, alignItems: 'center', marginTop: 24, marginBottom: 40 }}>
-            <View style={{ flexDirection: 'row'}}>
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                marginTop: 24,
+                marginBottom: 40,
+              }}>
+              <View style={{flexDirection: 'row'}}>
                 <View>
-                  <Text style={{ fontSize: 13, marginRight: 8}}>Don't have an account?</Text>
+                  <Text style={{fontSize: 13, marginRight: 8}}>
+                    Don't have an account?
+                  </Text>
                 </View>
-                
+
                 <TouchableOpacity
-                  // onPress={this.handleSignup}
-                  // onPress={this.verifyIdentity}
+                // onPress={this.handleSignup}
+                // onPress={this.verifyIdentity}
                 >
                   <Text
                     style={{
@@ -180,10 +202,10 @@ class LoginScreen extends Component {
                     Sign Up
                   </Text>
                 </TouchableOpacity>
-                </View>
-                </View>
-            </CustomContainer>
-          </Content>
+              </View>
+            </View>
+          </CustomContainer>
+        </Content>
         {/* </Container> */}
       </CustomContainer>
     );
