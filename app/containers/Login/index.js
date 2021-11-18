@@ -52,18 +52,6 @@ class LoginScreen extends Component {
   componentDidMount() {
     const {setLoading} = this.props;
     setLoading(false);
-    const auth0 = new Auth0({
-      domain: 'dev-p-g2q-gn.us.auth0.com',
-      clientId: '0imMNzMP8CZyvcblFOYwEKlpKWvTSAOB',
-    });
-    auth0.webAuth
-      .authorize({scope: 'openid profile email'})
-      .then((credentials) =>
-        // Successfully authenticated
-        // Store the accessToken
-        this.setState({accessToken: credentials.accessToken}),
-      )
-      .catch((error) => console.log(error));
   }
 
   handleShowPassword = () => {
@@ -81,6 +69,20 @@ class LoginScreen extends Component {
     //     // navigation.navigate('SignUpScreen');
     //   })
     //   .catch((e) => {});
+  };
+
+  authLogin = () => {
+    console.log('help');
+    const auth0 = new Auth0({
+      domain: 'dev-p-g2q-gn.us.auth0.com',
+      clientId: '0imMNzMP8CZyvcblFOYwEKlpKWvTSAOB',
+    });
+    auth0.webAuth
+      .authorize({scope: 'openid profile email'})
+      .then((credentials) =>
+        this.setState({accessToken: credentials.accessToken}),
+      )
+      .catch((error) => console.log(error));
   };
 
   render() {
@@ -200,6 +202,19 @@ class LoginScreen extends Component {
                       fontWeight: 'bold',
                     }}>
                     Sign Up
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <TouchableOpacity onPress={() => this.authLogin()}>
+                  <Text
+                    style={{
+                      color: theme.colors.primary,
+                      fontSize: 14,
+                      // marginLeft: theme.metrics.base.xs,
+                      fontWeight: 'bold',
+                    }}>
+                    Login Using Auth0
                   </Text>
                 </TouchableOpacity>
               </View>
