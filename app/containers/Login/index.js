@@ -42,6 +42,7 @@ import {selectors as MenuSelectors} from '../Menu/selectors';
 import {selectors as RootSelectors} from '../Root/selectors';
 import {capitalizeFirstLetter} from 'utils/utilityFunctions';
 import ReactNativeBiometrics from 'react-native-biometrics';
+import Fido2 from 'react-native-fido2';
 
 class LoginScreen extends Component {
   state = {
@@ -71,41 +72,13 @@ class LoginScreen extends Component {
     //   .catch((e) => {});
   };
 
-  handleBiometric = () => {
-    // ReactNativeBiometrics.isSensorAvailable().then((resultObject) => {
-    //   const {available, biometryType} = resultObject;
-    //   if (available && biometryType === ReactNativeBiometrics.Biometrics) {
-    //     ReactNativeBiometrics.createKeys('Fingerprint').then((resultObject) => {
-    //       const {publickey} = resultObject;
-    //       console.log('====================================');
-    //       console.log(publickey);
-    //       console.log('====================================');
-    //     });
-    //   }
-    // });
-    let payload = '';
-    ReactNativeBiometrics.createKeys('Confirm fingerprint').then(
-      (resultObject) => {
-        const {publicKey} = resultObject;
-        console.log('==================Public Key==================');
-        console.log(publicKey);
-        console.log('==================Public Key==================');
-        payload = publicKey;
-      },
-    );
-    payload = 'Gershom';
-    ReactNativeBiometrics.createSignature({
-      promptMessage: 'Sign in',
-      payload: payload,
-    }).then((resultObject) => {
-      const {success, signature} = resultObject;
+  handleRegisterFido2 = () => {
+    const register = Fido2.registerKey().then();
+  };
 
-      if (success) {
-        console.log('==================Signature==================');
-        console.log(signature);
-        console.log('==================Signature==================');
-      }
-    });
+  handleBiometric = () => {
+    const {attemptBiometric} = this.props;
+    attemptBiometric();
   };
   render() {
     const {handleSubmit, error, pristine, invalid, isLoading, loginProgress} =
@@ -227,7 +200,8 @@ class LoginScreen extends Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity onPress={this.handleBiometric}>
+              <TouchableOpacity
+                onPress={this.handleBiometric /*(values.username)*/}>
                 <Text
                   style={{
                     color: theme.colors.primary,
@@ -235,6 +209,16 @@ class LoginScreen extends Component {
                     fontWeight: 'bold',
                   }}>
                   Use Fingerprint
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.handleRegisterFido2}>
+                <Text
+                  style={{
+                    color: theme.colors.primary,
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                  }}>
+                  Register via Fido2
                 </Text>
               </TouchableOpacity>
             </View>

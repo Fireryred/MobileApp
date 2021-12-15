@@ -6,6 +6,7 @@ const {Types, Creators} = createActions({
 
   attemptLogin: ['payload'],
   setLoginProgress: ['loginProgressStatus'],
+  attemptBiometric: null,
 });
 
 const Actions = {
