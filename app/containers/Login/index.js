@@ -73,7 +73,19 @@ class LoginScreen extends Component {
   };
 
   handleRegisterFido2 = () => {
-    const register = Fido2.registerKey().then();
+    const url = 'https://webauthn.me/';
+    const challenge = 'sum string';
+    console.log('==================Start of Register==================');
+    Fido2.registerKey({
+      keyHandles: [''],
+      challenge: challenge,
+      appId: {url: 'https://webauthn.me/'},
+    }).then((resultObject) => {
+      console.log('==================Inside Register==================');
+      console.log(resultObject);
+      console.log('==================Inside Register==================');
+    });
+    console.log('==================End of Register==================');
   };
 
   handleBiometric = () => {
