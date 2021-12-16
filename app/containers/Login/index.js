@@ -45,6 +45,9 @@ import RNLoginApi from '@loginid/react-native-sdk';
 
 class LoginScreen extends Component {
   state = {
+    clientId:
+      'Snftk8O3Wy9rRA6zXMBLSeDwf8KvXgoGOPpyvm6aNOhkaGQr0tnpnZObxvaZvUanh7lh3ZHCsQQadVckI-Hw-g==',
+    baseUrl: 'https://717dc830-4076-11ec-b42a-bb8e0fc28366.usw1.loginid.io',
     showPassword: false,
     openSwitchAccount: false,
   };
@@ -70,17 +73,33 @@ class LoginScreen extends Component {
     //   })
     //   .catch((e) => {});
   };
-
   handleLoginId = () => {
+    const {clientId, baseUrl} = this.state;
     console.log('====================================');
-    console.log('Boop');
+    console.log(RNLoginApi.getCurrentToken());
     console.log('====================================');
-    const clientId =
-      'Snftk8O3Wy9rRA6zXMBLSeDwf8KvXgoGOPpyvm6aNOhkaGQr0tnpnZObxvaZvUanh7lh3ZHCsQQadVckI-Hw-g==';
-    const baseUrl =
-      'https://717dc830-4076-11ec-b42a-bb8e0fc28366.usw1.loginid.io';
     RNLoginApi.configure(clientId, baseUrl);
-    RNLoginApi.registerWithFido2('Gershom', null).then((resultObject) => {
+    RNLoginApi.authenticateWithFido2('Gershom', {
+      authentication_token: 'boop',
+    }).then((resultObject) => {
+      const {success} = resultObject;
+      if (success) {
+        console.log('====================================');
+        console.log(resultObject);
+        console.log('====================================');
+      } else {
+        console.log('====================================');
+        console.log(resultObject);
+        console.log('====================================');
+      }
+    });
+  };
+  handleRegisterLoginId = () => {
+    const {clientId, baseUrl} = this.state;
+    RNLoginApi.configure(clientId, baseUrl);
+    RNLoginApi.registerWithFido2('Gershom', {
+      authentication_token: 'boop',
+    }).then((resultObject) => {
       const {success} = resultObject;
       if (success) {
         console.log('====================================');
@@ -215,7 +234,7 @@ class LoginScreen extends Component {
                 </TouchableOpacity>
               </View>
               <View>
-                <TouchableOpacity onPress={this.handleLoginId}>
+                <TouchableOpacity onPress={this.handleRegisterLoginId}>
                   <Text
                     style={{
                       color: theme.colors.primary,
@@ -223,6 +242,18 @@ class LoginScreen extends Component {
                       fontWeight: 'bold',
                     }}>
                     Sign Up using LoginId
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <TouchableOpacity onPress={this.handleLoginId}>
+                  <Text
+                    style={{
+                      color: theme.colors.primary,
+                      fontSize: 14,
+                      fontWeight: 'bold',
+                    }}>
+                    Login using LoginId
                   </Text>
                 </TouchableOpacity>
               </View>
