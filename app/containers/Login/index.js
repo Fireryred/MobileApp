@@ -41,8 +41,6 @@ import {selectors} from './selectors';
 import {selectors as MenuSelectors} from '../Menu/selectors';
 import {selectors as RootSelectors} from '../Root/selectors';
 import {capitalizeFirstLetter} from 'utils/utilityFunctions';
-import ReactNativeBiometrics from 'react-native-biometrics';
-import Fido2 from 'react-native-fido2';
 
 class LoginScreen extends Component {
   state = {
@@ -70,10 +68,6 @@ class LoginScreen extends Component {
     //     // navigation.navigate('SignUpScreen');
     //   })
     //   .catch((e) => {});
-  };
-
-  handleRegisterFido2 = () => {
-    const register = Fido2.registerKey().then();
   };
 
   handleBiometric = () => {
